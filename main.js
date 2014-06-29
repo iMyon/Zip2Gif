@@ -117,10 +117,17 @@
 					// fileList.appendChild(li);
 				});
 				Promise.all(promises).then(function(results) {
+					//遮罩层
+					var mask = document.createElement("div");
+					mask.id = "mask";
+					mask.style = "background:white;width:100%; height: 100%; opacity:.5;position:fixed;top:0px;left:0px;";
+					document.body.appendChild(mask);
+
 					fileInput.disabled = true;
 						var gif = new GIF({
 					    workers: 1,
-					    quality: 10
+					    quality: 10,
+					    workerScript: "lib/gif.worker.js"
 					  });
 					var images = document.querySelectorAll(".images .original");
 				  // console.log(images);
@@ -129,6 +136,8 @@
 				  });
 				  gif.on('finished', function(blob) {
 						fileInput.disabled = false;
+						var mask = document.getElementById("mask");
+						mask.parentNode.removeChild(mask);
 				  	var blobURL = URL.createObjectURL(blob);
 				    var li = document.createElement("li");
 						var a = document.createElement("a");
